@@ -14,18 +14,22 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//input[@id='doSearch']")
     private WebElement doSearch;
 
-
-
     @FindBy(xpath = "//div[@class='item-wishlist']//span[@class='name']")
     private WebElement iconFavorites;
 
-    @FindBy(xpath = "//div[@class='header-tools cell-7']//span[@class='js-change-language']")
-    private WebElement languageButton;
+    @FindBy(xpath = "//div[@class='header-tools cell-7']//span[@data-language='ru']")
+    private WebElement languageButtonRU;
+
+    @FindBy(xpath = "//div[@class='header-tools cell-7']//span[@data-language='uk']")
+    private WebElement languageButtonUK;
+
+    @FindBy(xpath = "//div[@class='header-tools cell-7']//span[@data-language='uk']")
+    private WebElement popUp;
 
     @FindBy(xpath = "//span[@class='uppercase']")
     private WebElement iconCatalog;
 
-    @FindBy(xpath = "//li[@class='menu-main-item catalog active']//a[@class='menu-main-link']")
+    @FindBy(xpath = "//li[@class='menu-main-item catalog']")
     private WebElement allCatalogs;
 
     @FindBy(xpath = "//div[@class='item-login']//span[@class='name']")
@@ -33,10 +37,6 @@ public class HomePage extends BasePage {
 
     @FindBy(xpath = "//input[@placeholder='... знайти товар']")
     private WebElement searchPlaceholder;
-
-
-
-
 
 
     public HomePage(WebDriver driver) {
@@ -56,8 +56,12 @@ public class HomePage extends BasePage {
         return iconFavorites.isDisplayed();
     }
 
-    public String getLanguageButtonText() {
-        return languageButton.getText();
+    public String getLanguageButtonTextRU() {
+        return languageButtonRU.getText();
+    }
+
+    public String getLanguageButtonTextUK() {
+        return languageButtonUK.getText();
     }
 
     public boolean isIconCatalogVisible() {
@@ -80,17 +84,17 @@ public class HomePage extends BasePage {
         doSearch.click();
     }
 
-    public void clickAllCatalogsButton() {
-        allCatalogs.click();
+    public void clickLanguageButtonRU() {
+        languageButtonRU.click();
     }
 
-    public void clickLanguageButton() {
-        languageButton.click();
+    public void clickLanguageButtonUK() {
+        languageButtonUK.click();
     }
 
     public void enterTextToSearchField(final String searchText) {
         searchPlaceholder.clear();
-        searchPlaceholder.sendKeys(searchText, Keys.ENTER);
+        searchBox.sendKeys(searchText);
     }
 
 

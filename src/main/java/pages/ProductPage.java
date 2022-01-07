@@ -1,13 +1,19 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.List;
+
 public class ProductPage extends BasePage {
 
-    @FindBy(xpath = "//div[@class='bookmark-button flex']")
+    @FindBy(xpath = "//div[contains(@class, 'tabs-header__item flex center-xs ')]")
+    private List<WebElement> buttonAboutProduct;
+
+    @FindBy(xpath = "//div[@title='Додати товар в особисті списки']")
     private WebElement addToFavorites;
 
     @FindBy(xpath = "//button[@class='footer__btn btn btn--graphite']")
@@ -22,7 +28,8 @@ public class ProductPage extends BasePage {
     @FindBy(xpath = "//a[@class='listings-popover__item-link flex-inline' and contains(text(),'Закладки:')]")
     private WebElement buttonFavorites;
 
-
+    @FindBy(xpath = "//h2[@class='header__title text-x-lg']")
+    private WebElement textSpecifications;
 
 
     public ProductPage(WebDriver driver) {
@@ -30,25 +37,27 @@ public class ProductPage extends BasePage {
     }
 
 
+    public boolean isButtonAboutProductVisible() {
 
-    public WebElement getAddToFavoritesButton() {
-        return addToFavorites;
+        return buttonAboutProduct.get(0).isDisplayed();
     }
+
+    public void clickButtonAboutProduct() {
+
+        buttonAboutProduct.get(0).click();
+    }
+
 
     public boolean isButtonSaveToFavoritesVisible() {
         return buttonSaveToFavorites.isDisplayed();
     }
 
-    public void isButtonContinueVisible() {
-        buttonContinue.isDisplayed();
+    public boolean isButtonContinueVisible() {
+        return buttonContinue.isDisplayed();
     }
 
-    public String getButtonFavoritesHeaderText() {
-        return buttonFavorites.getText();
-    }
-
-    public void isButtonGoToFavoritesVisible() {
-        buttonGoToFavorites.isDisplayed();
+    public boolean isButtonGoToFavoritesVisible() {
+        return buttonGoToFavorites.isDisplayed();
     }
 
     public void clickButtonGoToFavorites() {
@@ -63,12 +72,9 @@ public class ProductPage extends BasePage {
         buttonSaveToFavorites.click();
     }
 
-    public void clickButtonContinue() {
-        buttonContinue.click();
-    }
 
-    public void clickbuttonGoToFavorites() {
-        buttonGoToFavorites.click();
+    public boolean isTextSpecificationsVisible() {
+        return textSpecifications.isDisplayed();
     }
 
 }

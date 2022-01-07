@@ -2,79 +2,87 @@ package tests;
 
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class SmokeTests extends BaseTest {
 
-
     private static final long DEFAULT_WAITING_TIME = 90;
 
     @Test
     public void checkMainComponentsOnHomePage() {
-        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
-        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
-        assertTrue(getHomePage().isHeaderVisible());
-        assertTrue(getHomePage().isFooterVisible());
-        assertTrue(getHomePage().isSearchFieldVisible());
-        assertTrue(getHomePage().isCartIconVisible());
-        assertTrue(getHomePage().getLanguageButtonText().equalsIgnoreCase("Français"));
-        assertTrue(getHomePage().isRegisterButtonVisible());
-        assertTrue(getHomePage().isSignInButtonVisible());
-        getHomePage().clickSignInButton();
-        getHomePage().waitVisibilityOfElement(DEFAULT_WAITING_TIME, getHomePage().getSignInPopup());
-        assertTrue(getHomePage().isEmailFieldVisible());
-        assertTrue(getHomePage().isPasswordFieldVisible());
-        getHomePage().clickSignInPopupCloseButton();
-        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
-        getHomePage().clickStoreButton();
-        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
-        assertTrue(getHomePage().isStorePopupVisible());
-        getHomePage().clickCartButton();
-        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
-        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
-        getHomePage().waitVisibilityOfElement(DEFAULT_WAITING_TIME, getShoppingCartPage().getShoppingCartTitle());
-        assertTrue(getShoppingCartPage().isShoppingCartTitleVisible());
-        getHomePage().clickLanguageButton();
-        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
-        assertTrue(getDriver().getCurrentUrl().contains("fr"));
+
+        assertTrue(getHomePage().isDoSearchVisible());
+        assertTrue(getHomePage().isAllCatalogsVisible());
+        assertTrue(getHomePage().isIconCatalogVisible());
+        getHomePage().waitForPageLoadComplete(5000);
+        assertTrue(getHomePage().isIconFavoritesVisible());
+        assertTrue(getHomePage().isItemLoginButtonVisible());
+        assertTrue(getHomePage().isSearchBoxVisible());
+        assertTrue(getHomePage().getLanguageButtonTextRU().equalsIgnoreCase("рус"));
+        getHomePage().clickLanguageButtonUK();
+        assertTrue(getHomePage().getLanguageButtonTextUK().equalsIgnoreCase("укр"));
+        getHomePage().clickLanguageButtonRU();
+        getHomePage().clickItemLoginButton();
+        getProductPage().waitForPageLoadComplete(30);
+        assertTrue(getDriver().getCurrentUrl().contains("login"));
     }
 
     @Test
-    public void checkWishList() throws InterruptedException {
-        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
+    public void checkSearchWishList() {
         getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
-        getHomePage().isSearchFieldVisible();
-        getHomePage().enterTextToSearchField("cake");
-        Thread.sleep(30000);//потому что баг, а не потому что так можно делать особенно вам!!!
+        getHomePage().isSearchBoxVisible();
+        getHomePage().implicitWait(3000);
+        getHomePage().enterTextToSearchField("Samsung");
+        getHomePage().clickDoSearchButton();
+        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
+        assertTrue(getSearchResultsPage().isTextSearchResultVisible());
+
+    }
+
+    @Test
+    public void checkProductPage() {
+        getHomePage().isSearchBoxVisible();
+        getHomePage().implicitWait(3000);
+        getHomePage().enterTextToSearchField("ASUS");
+        getHomePage().implicitWait(5000);
         getSearchResultsPage().clickWishListOnFirstProduct();
-        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
-        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
-        getHomePage().waitVisibilityOfElement(DEFAULT_WAITING_TIME, getHomePage().getWishListProductsCount());
-        assertEquals(getHomePage().getAmountOfProductsInWishList(), "1");
+        getProductPage().waitForPageLoadComplete(5000);
+        assertTrue(getProductPage().isButtonAboutProductVisible());
+        getProductPage().clickButtonAboutProduct();
+        assertTrue(getProductPage().isTextSpecificationsVisible());
     }
 
     @Test
-    public void checkAddToCart() {
+    public void checkAddToCFavorites() {
+        getHomePage().isSearchBoxVisible();
+        getHomePage().implicitWait(3000);
+        getHomePage().enterTextToSearchField("Xiaomi");
+        getHomePage().implicitWait(5000);
+        getSearchResultsPage().clickWishListOnFirstProduct();
+        getProductPage().waitForPageLoadComplete(5000);
+        assertTrue(getProductPage().isButtonAboutProductVisible());
+        getProductPage().clickAddToFavorites();
+        assertTrue(getProductPage().isButtonSaveToFavoritesVisible());
+        assertTrue(getProductPage().isButtonContinueVisible());
+        getHomePage().waitForPageLoadComplete(5000);
+        assertTrue(getProductPage().isButtonSaveToFavoritesVisible());
+        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
+        getProductPage().clickButtonSaveToFavorites();
+        getProductPage().waitForPageLoadComplete(5000);
+        assertTrue(getProductPage().isButtonContinueVisible());
+        assertTrue(getProductPage().isButtonGoToFavoritesVisible());
+        getProductPage().clickButtonGoToFavorites();
         getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
         getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
-        getHomePage().isSearchFieldVisible();
-        getHomePage().enterTextToSearchField("0830187p");
-        getProductPage().waitVisibilityOfElement(DEFAULT_WAITING_TIME, getProductPage().getAddToCartButton());
-        getProductPage().clickAddToCartButton();
-        getProductPage().waitVisibilityOfElement(DEFAULT_WAITING_TIME, getProductPage().getAddToCartPopupHeader());
-        assertTrue(getProductPage().isAddToCartPopupVisible());
-        getProductPage().isContinueShoppingButtonVisible();
-        getProductPage().isContinueToCartButtonVisible();
-        assertEquals(getProductPage().getAddToCartPopupHeaderText(), "You have added 1 item(s) to your cart");
-        getProductPage().clickContinueToCartButton();
-        getShoppingCartPage().waitVisibilityOfElement(DEFAULT_WAITING_TIME, getShoppingCartPage().getShoppingCartItem());
-        getShoppingCartPage().clickCheckoutButton();
-        getShoppingCartPage().waitVisibilityOfElement(DEFAULT_WAITING_TIME, getCheckoutPage().getPaymentCartButton());
-        getCheckoutPage().clickPaymentCartButton();
-        getShoppingCartPage().waitVisibilityOfElement(DEFAULT_WAITING_TIME, getCheckoutPage().getPaymentForm());
-        assertTrue(getCheckoutPage().isPaymentFormVisible());
-        assertTrue(getCheckoutPage().isBillingFormVisible());
-        assertTrue(getCheckoutPage().isCompleteOrderButtonVisible());
+        assertEquals(getBookmarksPage().getCountBookmarks(), "1");
+
+
+
+
+
     }
+
 }

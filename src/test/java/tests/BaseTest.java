@@ -11,10 +11,7 @@ import org.testng.annotations.Parameters;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import pages.LoginPage;
-import pages.HomePage;
-import pages.ProductPage;
-import pages.SearchResultsPage;
+import pages.*;
 import utils.CapabilityFactory;
 
 public class BaseTest {
@@ -58,8 +55,8 @@ public class BaseTest {
         return new ProductPage(getDriver());
     }
 
-    public LoginPage getCheckoutPage() {
-        return new LoginPage(getDriver());
+    public BookmarksPage getBookmarksPage () {
+        return new BookmarksPage(getDriver());
     }
 
 }
