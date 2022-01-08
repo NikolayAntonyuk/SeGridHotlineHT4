@@ -1,9 +1,6 @@
 package tests;
 
 import org.testng.annotations.Test;
-
-import java.io.IOException;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -13,7 +10,8 @@ public class SmokeTests extends BaseTest {
 
     @Test
     public void checkMainComponentsOnHomePage() {
-
+        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
+        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
         assertTrue(getHomePage().isDoSearchVisible());
         assertTrue(getHomePage().isAllCatalogsVisible());
         assertTrue(getHomePage().isIconCatalogVisible());
@@ -32,6 +30,7 @@ public class SmokeTests extends BaseTest {
 
     @Test
     public void checkSearchWishList() {
+        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
         getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
         getHomePage().isSearchBoxVisible();
         getHomePage().implicitWait(3000);
@@ -44,9 +43,12 @@ public class SmokeTests extends BaseTest {
 
     @Test
     public void checkProductPage() {
+        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
+        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
         getHomePage().isSearchBoxVisible();
         getHomePage().implicitWait(3000);
         getHomePage().enterTextToSearchField("ASUS");
+        getHomePage().clickDoSearchButton();
         getHomePage().implicitWait(5000);
         getSearchResultsPage().clickWishListOnFirstProduct();
         getProductPage().waitForPageLoadComplete(5000);
@@ -57,14 +59,18 @@ public class SmokeTests extends BaseTest {
 
     @Test
     public void checkAddToCFavorites() {
+        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
+        getHomePage().waitForAjaxToComplete(DEFAULT_WAITING_TIME);
         getHomePage().isSearchBoxVisible();
-        getHomePage().implicitWait(3000);
+        getHomePage().waitForPageLoadComplete(DEFAULT_WAITING_TIME);
         getHomePage().enterTextToSearchField("Xiaomi");
+        getHomePage().clickDoSearchButton();
         getHomePage().implicitWait(5000);
         getSearchResultsPage().clickWishListOnFirstProduct();
         getProductPage().waitForPageLoadComplete(5000);
         assertTrue(getProductPage().isButtonAboutProductVisible());
         getProductPage().clickAddToFavorites();
+        getProductPage().waitForPageLoadComplete(5000);
         assertTrue(getProductPage().isButtonSaveToFavoritesVisible());
         assertTrue(getProductPage().isButtonContinueVisible());
         getHomePage().waitForPageLoadComplete(5000);
